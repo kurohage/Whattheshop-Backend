@@ -34,4 +34,4 @@ class Profile(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orders")
 
 	def __str__(self):
-		return str(self.user)
+		return str(self.user.username)
