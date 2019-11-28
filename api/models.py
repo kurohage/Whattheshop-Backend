@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Product(models.Model):
-	image_url = models.CharField(max_length=300)
+	# image_url = models.CharField(max_length=300)
+	image_url = models.ImageField(null=True, blank=True)
 	name = models.CharField(max_length=100)
 	price = models.FloatField()
 	size = models.CharField(choices=(("S","S"), ("M","M"), ("L", "L")), max_length=1)
