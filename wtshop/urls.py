@@ -9,6 +9,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from api import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
@@ -16,6 +18,7 @@ urlpatterns = [
     # path('/api/products/<int:product_id>/', views.ProductDetails.as_view(), name='product-details'),
 
     path('login/', TokenObtainPairView.as_view(), name="login"),
+    path('register/', views.UserCreateAPIView.as_view(), name="register"),
 ]
 
 
