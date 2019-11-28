@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from api import views
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -11,6 +12,8 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('products/', views.ProductsList.as_view(), name='products-list'),
+    # path('/api/products/<int:product_id>/', views.ProductDetails.as_view(), name='product-details'),
 
     path('login/', TokenObtainPairView.as_view(), name="login"),
 ]
