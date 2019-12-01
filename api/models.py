@@ -1,13 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+CHOICES_SIZE = (("S","S"), ("M","M"), ("L", "L"))
+
 class Product(models.Model):
 	# image_url = models.CharField(max_length=300)
-	image_url = models.ImageField(null=True, blank=True)
+	image = models.ImageField(null=True, blank=True)
 	name = models.CharField(max_length=100)
 	price = models.FloatField()
-	size = models.CharField(choices=(("S","S"), ("M","M"), ("L", "L")), max_length=1)
-	weight = models.PositiveIntegerField()
+	size = models.CharField(choices=CHOICES_SIZE, max_length=1)
+	weight = models.FloatField()
 	description = models.TextField()
 
 	def __str__(self):
@@ -25,6 +27,7 @@ class Item(models.Model):
 class Order(models.Model):
 	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="orders")
 	order_date = models.DateTimeField(auto_now_add=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return "Ordered on %s" % (order_date)
