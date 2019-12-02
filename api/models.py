@@ -22,7 +22,7 @@ class Item(models.Model):
 	price = models.FloatField()
 
 	def __str__(self):
-		return "%s of %s" % (quantity, product.name)
+		return "%s of %s" % (self.quantity, self.product.name)
 
 class Order(models.Model):
 	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="orders")
@@ -30,7 +30,7 @@ class Order(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return "Ordered on %s" % (order_date)
+		return "Ordered on %s" % (self.order_date)
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
