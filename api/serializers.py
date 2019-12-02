@@ -30,8 +30,3 @@ class ItemSerializer(serializers.ModelSerializer):
         model = Item
         fields = ['flight', 'date', 'id']
 
-
-class ProductDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['image', 'name', 'size', 'weight', 'price', 'description', 'id']

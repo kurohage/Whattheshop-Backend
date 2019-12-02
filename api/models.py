@@ -8,7 +8,7 @@ class Product(models.Model):
 	image = models.ImageField(null=True, blank=True)
 	name = models.CharField(max_length=100)
 	price = models.FloatField()
-	size = models.CharField(choices=CHOICES_SIZE, max_length=1)
+	#size = models.CharField(choices=CHOICES_SIZE, max_length=1)
 	weight = models.FloatField()
 	description = models.TextField()
 
@@ -17,7 +17,7 @@ class Product(models.Model):
 
 class Item(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="items")
-	size = models.CharField(max_length=1)
+	#size = models.CharField(max_length=1)
 	quantity = models.PositiveIntegerField()
 	price = models.FloatField()
 
