@@ -3,11 +3,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Product, Item, Order, Profile
-from .serializers import UserCreateSerializer, ProductSerializer, OrderSerializer, ProfileSerializer
+from .serializers import ProductSerializer, OrderSerializer, ProfileSerializer, ProfileCreateSerializer
 from .permissions import IsOrderOwner
 
-class UserCreateAPIView(CreateAPIView):
-    serializer_class = UserCreateSerializer
+class ProfileCreateAPIView(CreateAPIView):
+    serializer_class = ProfileCreateSerializer
     permission_classes = [AllowAny]
 
 class ProductsList(ListAPIView):
