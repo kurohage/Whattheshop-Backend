@@ -14,7 +14,8 @@ urlpatterns = [
 
     path('profile/', views.ProfileDetail.as_view(), name="profile-detail"),
 
-    path('login/', TokenObtainPairView.as_view(), name="login"),
+    #path('login/', TokenObtainPairView.as_view(), name="login"),
+    path('login/', views.TokenObtainPairWithProfileView.as_view(), name="login"),
     path('register/', views.ProfileCreateAPIView.as_view(), name="register"),
     
 ]

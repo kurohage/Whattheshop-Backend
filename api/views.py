@@ -1,9 +1,15 @@
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Product, Item, Order, Profile
-from .serializers import ProductSerializer, OrderSerializer, ProfileSerializer, ProfileCreateSerializer
+from .serializers import (
+	ProductSerializer,
+	OrderSerializer,
+	ProfileSerializer,
+	ProfileCreateSerializer,
+	TokenObtainPairWithProfileSerializer)
 from .permissions import IsOrderOwner
 
 class ProfileCreateAPIView(CreateAPIView):
@@ -27,3 +33,6 @@ class ProfileDetail(RetrieveAPIView):
 
 	def get_object(self):
 		return Profile.objects.get(user=self.request.user)
+
+class TokenObtainPairWithProfileView(TokenObtainPairView):
+	serializer_class = TokenObtainPairWithProfileSerializer
