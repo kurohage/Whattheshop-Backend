@@ -26,7 +26,7 @@ class Product(models.Model):
 
 # Defines a grouped number of Product Items in a single order
 class Order(models.Model):
-	items = models.ManyToManyField(Product, through="Item")
+	products = models.ManyToManyField(Product, through="Item")
 	date = models.DateTimeField(auto_now_add=True)
 	profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
@@ -36,7 +36,7 @@ class Order(models.Model):
 # An item is a product with a specific quantity and price at the time of purchase
 class Item(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="items")
-	order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orders", null=True)
+	order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items", null=True)
 	#size = models.CharField(max_length=1)
 	quantity = models.PositiveIntegerField()
 	price = models.FloatField()
