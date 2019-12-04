@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from .models import Product, Item, Order, Profile
 
 # Create Profile
@@ -43,10 +45,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer() # this returns full product object, which isn't needed
-    #product = serializers.SlugRelatedField(
-    #        read_only=True,
-    #        slug_field='name'
-    #    )
 
     class Meta:
         model = Item
@@ -55,17 +53,10 @@ class ItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = ItemSerializer(many=True)
-    #items = serializers.SerializerMethodField()
-    #items = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), many=True) # this returned the item's ID, which is bad as we'd need to do yet another query
 
     class Meta:
         model = Order
         fields = ['items', 'date', 'id']
-
-    #def get_items(self, object):
-    #    items = Item.objects.filter(order=object.id)
-    #    serializer = ItemSerializer(instance=items, many=True)
-    #    return serializer.data
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -82,3 +73,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         orders = Order.objects.filter() # profile__user=object.user
         serializer = OrderSerializer(instance=orders, many=True)
         return serializer.data
+
+
+class TokenObtainPairWithProfileSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        profile = Profile.objects.get(user__id=user.id)
+        serializer = ProfileSerializer(instance=profile).data
+        token['profile'] = serializer
+
+        return token
