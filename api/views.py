@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
@@ -21,9 +21,9 @@ class OrdersList(ListAPIView):
 	def get_queryset(self):
 		return Order.objects.filter(profile__user=self.request.user)
 
-class ProfileDetail(ListAPIView):
+class ProfileDetail(RetrieveAPIView):
 	serializer_class = ProfileSerializer
 	permission_classes = [IsAuthenticated]
 
-	def get_queryset(self):
-		return Profile.objects.filter(user=self.request.user)
+	def get_object(self):
+		return Profile.objects.get(user=self.request.user)
