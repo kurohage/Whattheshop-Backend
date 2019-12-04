@@ -42,17 +42,18 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = serializers.SerializerMethodField()
+    items = ItemSerializer(many=True)
+    #items = serializers.SerializerMethodField()
     #items = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), many=True) # this returned the item's ID, which is bad as we'd need to do yet another query
 
     class Meta:
         model = Order
         fields = ['items', 'date', 'id']
 
-    def get_items(self, object):
-        items = Item.objects.filter(order=object.id)
-        serializer = ItemSerializer(instance=items, many=True)
-        return serializer.data
+    #def get_items(self, object):
+    #    items = Item.objects.filter(order=object.id)
+    #    serializer = ItemSerializer(instance=items, many=True)
+    #    return serializer.data
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -66,6 +67,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_orders(self, object):
         # answer found here: https://stackoverflow.com/questions/25312987/django-rest-framework-limited-queryset-for-nested-modelserializer
-        orders = Order.objects.filter(profile__user=object.user)
+        orders = Order.objects.filter() # profile__user=object.user
         serializer = OrderSerializer(instance=orders, many=True)
         return serializer.data
