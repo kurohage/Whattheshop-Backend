@@ -19,16 +19,16 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # First, instantiate a new user object and save it
-        username = validated_data.get("username")
+        username = validated_data.get("username").lower()
         password = validated_data.get("password")
-        first_name = validated_data.get("first_name")
-        last_name = validated_data.get("last_name")
+        first_name = validated_data.get("first_name").title()
+        last_name = validated_data.get("last_name").title()
         new_user = User(username=username, first_name=first_name, last_name=last_name)
         new_user.set_password(password)
         new_user.save()
 
         # Second, feed the user object to Profile and give it rest of fields (email, gender, age, ...etc.)
-        Profile.objects.create(user=new_user, email=validated_data.get("email"))
+        Profile.objects.create(user=new_user, email=validated_data.get("email").lower())
         return validated_data
 
 
