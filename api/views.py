@@ -10,7 +10,7 @@ from .serializers import (
 	ProfileSerializer,
 	ProfileCreateSerializer,
 	TokenObtainPairWithProfileSerializer)
-from .permissions import IsOrderOwner
+from .permissions import IsStaffOrOrderOwner
 
 class ProfileCreateAPIView(CreateAPIView):
     serializer_class = ProfileCreateSerializer
@@ -22,7 +22,7 @@ class ProductsList(ListAPIView):
 
 class OrdersList(ListAPIView):
 	serializer_class = OrderSerializer
-	permission_classes = [IsAuthenticated, IsOrderOwner]
+	permission_classes = [IsAuthenticated, IsStaffOrOrderOwner]
 
 	def get_queryset(self):
 		return Order.objects.filter(profile__user=self.request.user)
