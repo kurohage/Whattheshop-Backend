@@ -70,7 +70,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_orders(self, object):
         # answer found here: https://stackoverflow.com/questions/25312987/django-rest-framework-limited-queryset-for-nested-modelserializer
-        orders = Order.objects.filter() # profile__user=object.user
+        orders = Order.objects.filter(profile__user=object.user)
         serializer = OrderSerializer(instance=orders, many=True)
         return serializer.data
 
