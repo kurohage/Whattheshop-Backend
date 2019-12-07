@@ -4,21 +4,23 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Product, Item, Order, Profile
 
-# Create Profile
-# Since Profile model has User object, we'll first create a user object, then feed it to the Profile
+# Create Profile.
+# Since Profile model has User object, we'll first create a User object, then feed it to the Profile.
 class ProfileCreateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True) # Ensure field's used when updating or creating an instance, 
+    # but is not included when serializing the representation.
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True, allow_blank=False) #Kept here temporarily. Will move this later inside the user, then add Age/Gender or something else
+    email = serializers.EmailField(required=True, allow_blank=False)  # Kept here temporarily.
+    # Will move this later inside the user, then add Age/Gender or others.
 
     class Meta:
         model = Profile
         fields = ['username', 'password', 'first_name', 'last_name', 'email']
 
     def create(self, validated_data):
-        # First, instantiate a new user object and save it
+        # First, instantiate a new user object and save it.
         username = validated_data.get("username").lower()
         password = validated_data.get("password")
         first_name = validated_data.get("first_name").title()
@@ -37,6 +39,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         model = User    
         fields = ['first_name', 'last_name', 'username', 'id']
 
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -44,11 +47,33 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer() # this returns full product object, which isn't needed
+    product = ProductSerializer() # This returns full product object, which isn't needed.
 
     class Meta:
         model = Item
         fields = ['product', 'order', 'quantity', 'price', 'id']
+
+
+class ItemCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Item
+        fields = ['product', 'quantity', 'price']
+
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    items = ItemCreateSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ['items']
+
+    def create(self, validated_data):
+        items_data = validated_data.pop('items')
+        item = Item.objects.create(**validated_data)
+        for item_data in items_data:
+            Item.objects.create(item=item, **item_data)
+        return item
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -60,7 +85,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-
     user = UserInfoSerializer()
     orders = serializers.SerializerMethodField()
     
@@ -69,7 +93,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['user', 'email', 'orders']
 
     def get_orders(self, object):
-        # answer found here: https://stackoverflow.com/questions/25312987/django-rest-framework-limited-queryset-for-nested-modelserializer
+        # Answer found here: https://stackoverflow.com/questions/25312987/django-rest-framework-limited-queryset-for-nested-modelserializer
         orders = Order.objects.filter(profile__user=object.user)
         serializer = OrderSerializer(instance=orders, many=True)
         return serializer.data
@@ -80,7 +104,7 @@ class TokenObtainPairWithProfileSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # Add custom claims
+        # Add custom claims.
         profile = Profile.objects.get(user__id=user.id)
         serializer = ProfileSerializer(instance=profile).data
         token['profile'] = serializer

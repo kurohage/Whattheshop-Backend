@@ -8,6 +8,7 @@ from .serializers import (
 	ProductSerializer,
 	OrderSerializer,
 	ProfileSerializer,
+	OrderCreateSerializer,
 	ProfileCreateSerializer,
 	TokenObtainPairWithProfileSerializer)
 from .permissions import IsStaffOrOrderOwner
@@ -19,6 +20,13 @@ class ProfileCreateAPIView(CreateAPIView):
 class ProductsList(ListAPIView):
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
+
+class OrderCreateAPIView(CreateAPIView):
+    serializer_class = OrderCreateSerializer
+    permission_classes = [IsAuthenticated, IsStaffOrOrderOwner]
+
+    def perform_create(self, serializer):
+        serializer.save(profile__user=self.request.user)
 
 class OrdersList(ListAPIView):
 	serializer_class = OrderSerializer
