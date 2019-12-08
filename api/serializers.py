@@ -69,11 +69,11 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         fields = ['items']
 
     def create(self, validated_data):
-        items_data = validated_data.pop('items')
-        item = Item.objects.create(**validated_data)
-        for item_data in items_data:
-            Item.objects.create(item=item, **item_data)
-        return item
+        items = validated_data.pop('items')
+        order = Order.objects.create(**validated_data)
+        for item in items:
+            Item.objects.create(order=order, **item)
+        return order
 
 
 class OrderSerializer(serializers.ModelSerializer):

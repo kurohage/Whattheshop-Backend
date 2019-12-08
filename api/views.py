@@ -26,7 +26,7 @@ class OrderCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsStaffOrOrderOwner]
 
     def perform_create(self, serializer):
-        serializer.save(profile__user=self.request.user)
+        serializer.save(profile=self.request.user.profile)
 
 class OrdersList(ListAPIView):
 	serializer_class = OrderSerializer
