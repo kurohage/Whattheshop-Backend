@@ -43,7 +43,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['image', 'name', 'weight', 'description', 'price', 'id']
+        fields = ['image', 'image3d', 'name', 'weight', 'description', 'price', 'id']
 
 
 class ItemSerializer(serializers.ModelSerializer):
