@@ -16,6 +16,7 @@ class Profile(models.Model):
 class Product(models.Model):
 	# image_url = models.CharField(max_length=300)
 	image = models.ImageField(null=True, blank=True)
+	image3d = models.ImageField(null=True, blank=True) #A field to save an image in its red/blue 3d view
 	name = models.CharField(max_length=100)
 	price = models.FloatField()
 	#size = models.CharField(choices=CHOICES_SIZE, max_length=1)
