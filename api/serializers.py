@@ -90,7 +90,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = ['user', 'email', 'orders']
+        fields = ['user', 'image', 'email', 'orders']
 
     def get_orders(self, object):
         # Answer found here: https://stackoverflow.com/questions/25312987/django-rest-framework-limited-queryset-for-nested-modelserializer
